@@ -6,11 +6,14 @@ pool: new_agent
 
 
 steps:
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/saurabh_alok'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
     backendServiceArm: 'saurabh pipeline service connection'
     backendAzureRmResourceGroupName: 'pipelinerg20'
     backendAzureRmStorageAccountName: 'pipelinestg20'

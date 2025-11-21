@@ -1,0 +1,18 @@
+trigger:
+- main
+- feature/*
+
+pool: new_agent
+
+
+steps:
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/saurabh_alok'
+    backendServiceArm: 'saurabh pipeline service connection'
+    backendAzureRmResourceGroupName: 'pipelinerg20'
+    backendAzureRmStorageAccountName: 'pipelinestg20'
+    backendAzureRmContainerName: 'pipelinecontainer20'
+    backendAzureRmKey: 'dev.terraform.tfstate'

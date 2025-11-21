@@ -21,9 +21,19 @@ steps:
     backendAzureRmKey: 'dev.terraform.tfstate'
 
 - task: TerraformTask@5
-  displayName: terraform plan
+
+  displayName: plan
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/saurabh_alok'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
     environmentServiceNameAzureRM: 'saurabh pipeline service connection'
+
+- task: TerraformTask@5
+  displayName: apply
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    commandOptions: '-auto-approve'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'

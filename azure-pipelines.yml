@@ -27,3 +27,13 @@ steps:
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     environmentServiceNameAzureRM: 'saurabh pipeline service connection'
+
+- task: TerraformTask@5
+  displayName: apply
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    commandOptions: '-auto-approve'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    environmentServiceNameAzureRM: 'saurabh pipeline service connection'

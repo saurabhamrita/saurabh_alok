@@ -10,7 +10,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/saurabh_alok'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/saurabhamrita/saurabh_alok'
     backendServiceArm: 'saurabh pipeline service connection'
     backendAzureRmResourceGroupName: 'pipelinerg20'
     backendAzureRmStorageAccountName: 'pipelinestg20'

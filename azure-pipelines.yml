@@ -21,6 +21,7 @@ steps:
     backendAzureRmKey: 'dev.terraform.tfstate'
 
 - task: TerraformTask@5
+
   displayName: plan
   inputs:
     provider: 'azurerm'
@@ -36,4 +37,3 @@ steps:
     command: 'apply'
     commandOptions: '-auto-approve'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
-    environmentServiceNameAzureRM: 'saurabh pipeline service connection'

@@ -4,12 +4,16 @@ trigger:
 
 pool: new_agent
 
-
 steps:
+
+# ---- Install Terraform ----
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
+
+# ---- Terraform Init ----
 - task: TerraformTask@5
+  displayName: Terraform Init
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -20,20 +24,22 @@ steps:
     backendAzureRmContainerName: 'pipelinecontainer20'
     backendAzureRmKey: 'dev.terraform.tfstate'
 
+# ---- Terraform Plan ----
 - task: TerraformTask@5
-
-  displayName: plan
+  displayName: Terraform Plan
   inputs:
     provider: 'azurerm'
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     environmentServiceNameAzureRM: 'saurabh pipeline service connection'
 
+# ---- Terraform Apply (Only for main branch) ----
 - task: TerraformTask@5
-  displayName: apply
+  displayName: Terraform Apply
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   inputs:
     provider: 'azurerm'
     command: 'apply'
     commandOptions: '-auto-approve'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
+    environmentServiceNameAzureRM: 'saurabh pipeline service connection'

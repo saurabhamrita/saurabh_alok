@@ -37,3 +37,4 @@ steps:
     command: 'apply'
     commandOptions: '-auto-approve'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
+    environmentServiceNameAzureRM: 'saurabh pipeline service connection'

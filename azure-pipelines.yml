@@ -19,3 +19,11 @@ steps:
     backendAzureRmStorageAccountName: 'pipelinestg20'
     backendAzureRmContainerName: 'pipelinecontainer20'
     backendAzureRmKey: 'dev.terraform.tfstate'
+
+- task: TerraformTask@5
+  displayName: plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    environmentServiceNameAzureRM: 'saurabh pipeline service connection'

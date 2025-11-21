@@ -1,0 +1,32 @@
+trigger:
+- main
+- feature/*
+
+pool: new_agent
+
+
+steps:
+- task: TerraformTask@5
+  displayName: Terraform init
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'saurabh pipeline service connection'
+    backendAzureRmResourceGroupName: 'pipelinerg20'
+    backendAzureRmStorageAccountName: 'pipelinestg20'
+    backendAzureRmContainerName: 'pipelinecontainer20'
+    backendAzureRmKey: 'dev.terraform.tfstate'
+
+- task: TerraformTask@5
+  displayName: terraform plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'saurabh pipeline service connection'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    commandOptions: '-auto-approve'
+    environmentServiceNameAzureRM: 'saurabh pipeline service connection'

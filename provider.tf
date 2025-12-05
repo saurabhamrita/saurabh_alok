@@ -11,5 +11,5 @@ provider "azurerm" {
 features {
   
 }
-subscription_id = "95ee2fae-8d34-445a-ac77-682e435397fd"
+subscription_id = "6e06e212-633e-4e8c-8ab0-7ea51400a2e2"
 }

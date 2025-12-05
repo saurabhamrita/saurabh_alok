@@ -1,16 +1,16 @@
-pool: 
-  name: Saliyan   # If your pool name is Saliyan
+pool:
+  name: Saliyan
 
 trigger: none
 
 stages:
+# ------------------- BUILD / PLAN -------------------
 - stage: Build
   displayName: Build stage
 
   jobs:
   - job: Terraform
     displayName: Terraform Install & Run
-
     steps:
     - task: TerraformInstaller@1
       inputs:
@@ -35,3 +35,24 @@ stages:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
         environmentServiceNameAzureRM: 'slc'
+
+
+- stage: Deploy
+  displayName: Deploy
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+  jobs: 
+  - job: ManualValidation
+    displayName: Manual Validation kardo Please
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'sonambewafaa420@gmail.com'
+        approvers: 'sonambewafaa420@gmail.com'
+        instructions: 'Plan check karle pagli...'
+
+
+
+
+
+

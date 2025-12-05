@@ -1,26 +1,37 @@
-pool: Saliyan
+pool: 
+  name: Saliyan   # If your pool name is Saliyan
 
 trigger: none
 
 stages:
-   - stage: 
-     displayName: Build stage
-     jobs:
-       - job: 
-         displayName: terraform install
-         steps:
-         - task: TerraformInstaller@1
-           inputs:
-             terraformVersion: 'latest'
-         
-         - task: TerraformTask@5
-           inputs:
-             provider: 'azurerm'
-             command: 'init'
-             workingDirectory: '$(System.DefaultWorkingDirectory)'
-             backendServiceArm: 'slc'
-             backendAzureRmResourceGroupName: 'rgs'
-             backendAzureRmStorageAccountName: 'stg'
-             backendAzureRmContainerName: 'container'
-             backendAzureRmKey: 'dev.tfstate'
+- stage: Build
+  displayName: Build stage
 
+  jobs:
+  - job: Terraform
+    displayName: Terraform Install & Run
+
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTaskV4@4
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        backendServiceArm: 'slc'
+        backendAzureRmResourceGroupName: 'rgs'
+        backendAzureRmStorageAccountName: 'stg'
+        backendAzureRmContainerName: 'container'
+        backendAzureRmKey: 'dev.tfstate'
+
+    - task: TerraformTaskV4@4
+      displayName: Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        environmentServiceNameAzureRM: 'slc'

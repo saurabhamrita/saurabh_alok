@@ -51,6 +51,19 @@ stages:
         approvers: 'sk74564@gmail.com'
         instructions: 'Plan check karle pagli...'
 
+- stage:  ValidateandApply
+  displayName: 'Apply & Validate'
+  jobs:
+    - job: Terraformvalidate
+      displayName: validate
+      steps:
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+
+
+
 
 
 

@@ -38,6 +38,14 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)'
         environmentServiceNameAzureRM: 'slc'
 
+    # 👉 ARTIFACT PUBLISH
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Terraform Artifact
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)'
+        artifact: 'terraform-artifact'
+        publishLocation: 'pipeline'
+
 
 # ------------------- MANUAL VALIDATION -------------------
 - stage: Deploy
@@ -62,44 +70,51 @@ stages:
   displayName: 'Apply & Validate'
 
   jobs:
-  - job: Terraform
-    displayName: Terraform Install & Run
+
+  # 👉 DOWNLOAD ARTIFACT FIRST
+  - job: DownloadArtifact
+    displayName: Download Terraform Artifact
+
+    steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: Download Terraform Files
+      inputs:
+        artifact: 'terraform-artifact'
+        path: '$(Pipeline.Workspace)/terraform'
+
+  # 👉 INIT
+  - job: Terraforminit
+    displayName: Terraform Init
+    dependsOn: DownloadArtifact
 
     steps:
     - task: TerraformInstaller@1
       inputs:
         terraformVersion: 'latest'
 
-
-  - job: Terraforminit
-    displayName: Terraform Init
-    steps:
     - task: TerraformTaskV4@4
       displayName: Terraform Init
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        workingDirectory: '$(Pipeline.Workspace)/terraform'
         backendServiceArm: 'slc'
         backendAzureRmResourceGroupName: 'rgs'
         backendAzureRmStorageAccountName: 'stg'
         backendAzureRmContainerName: 'container'
         backendAzureRmKey: 'dev.tfstate'
 
-    - task: TerraformTask@5
+
+  # 👉 VALIDATE
+  - job: Terraformvalidate
+    displayName: Terraform Validate
+    dependsOn: Terraforminit
+    condition: succeeded()
+
+    steps:
+    - task: TerraformTaskV4@4
+      displayName: Terraform Validate
       inputs:
         provider: 'azurerm'
         command: 'validate'
-
-
-
-
-
-
-
-
-
-
-
-
-
+        workingDirectory: '$(Pipeline.Workspace)/terraform'

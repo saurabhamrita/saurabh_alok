@@ -62,6 +62,14 @@ stages:
   displayName: 'Apply & Validate'
 
   jobs:
+  - job: Terraform
+    displayName: Terraform Install & Run
+
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
 
   - job: Terraforminit
     displayName: Terraform Init

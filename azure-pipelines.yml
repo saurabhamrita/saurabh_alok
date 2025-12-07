@@ -4,6 +4,7 @@ pool:
 trigger: none
 
 stages:
+
 # ------------------- BUILD / PLAN -------------------
 - stage: Build
   displayName: Build stage
@@ -61,8 +62,9 @@ stages:
   displayName: 'Apply & Validate'
 
   jobs:
-  - job: TerraformInit
-    displayName: init
+
+  - job: Terraforminit
+    displayName: Terraform Init
     steps:
     - task: TerraformTaskV4@4
       displayName: Terraform Init
@@ -76,9 +78,9 @@ stages:
         backendAzureRmContainerName: 'container'
         backendAzureRmKey: 'dev.tfstate'
 
-  - job: TerraformValidate
-    displayName: validate
-    dependsOn: TerraformInit
+  - job: Terraformvalidate
+    displayName: Terraform Validate
+    dependsOn: Terraforminit
     condition: succeeded()
 
     steps:
@@ -88,6 +90,8 @@ stages:
         provider: 'azurerm'
         command: 'validate'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+
 
 
 

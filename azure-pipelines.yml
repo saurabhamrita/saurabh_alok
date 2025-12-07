@@ -47,9 +47,11 @@ stages:
     steps:
     - task: ManualValidation@1
       inputs:
-        notifyUsers: 'sonambewafaa420@gmail.com'
-        approvers: 'sonambewafaa420@gmail.com'
+        notifyUsers: 'sk74564@gmail.com'
+        approvers: 'sk74564@gmail.com'
         instructions: 'Plan check karle pagli...'
+
+
 
 
 

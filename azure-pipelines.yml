@@ -11,6 +11,7 @@ stages:
   jobs:
   - job: Terraform
     displayName: Terraform Install & Run
+
     steps:
     - task: TerraformInstaller@1
       inputs:
@@ -37,13 +38,16 @@ stages:
         environmentServiceNameAzureRM: 'slc'
 
 
+# ------------------- MANUAL VALIDATION -------------------
 - stage: Deploy
   displayName: Deploy
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-  jobs: 
+
+  jobs:
   - job: ManualValidation
     displayName: Manual Validation kardo Please
     pool: server
+
     steps:
     - task: ManualValidation@1
       inputs:
@@ -51,30 +55,40 @@ stages:
         approvers: 'sk74564@gmail.com'
         instructions: 'Plan check karle pagli...'
 
-- stage:  ValidateandApply
+
+# ------------------- VALIDATE & APPLY -------------------
+- stage: ValidateandApply
   displayName: 'Apply & Validate'
+
   jobs:
-    - job: Terraforminit
-      displayName: init
-      steps:
-      - task: TerraformTask@5
-        inputs:
-          provider: 'azurerm'
-          command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)'
-          backendServiceArm: 'slc'
-          backendAzureRmResourceGroupName: 'rgs'
-          backendAzureRmStorageAccountName: 'stg'
-          backendAzureRmContainerName: 'container'
-          backendAzureRmKey: 'dev.tfstate'
- 
-    - job: Terraformvalidate
-      displayName: validate
-      steps:
-      - task: TerraformTaskV4@4
-        inputs:
-          provider: 'azurerm'
-          command: 'validate'
+  - job: TerraformInit
+    displayName: init
+    steps:
+    - task: TerraformTaskV4@4
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        backendServiceArm: 'slc'
+        backendAzureRmResourceGroupName: 'rgs'
+        backendAzureRmStorageAccountName: 'stg'
+        backendAzureRmContainerName: 'container'
+        backendAzureRmKey: 'dev.tfstate'
+
+  - job: TerraformValidate
+    displayName: validate
+    dependsOn: TerraformInit
+    condition: succeeded()
+
+    steps:
+    - task: TerraformTaskV4@4
+      displayName: Terraform Validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
 
 
 

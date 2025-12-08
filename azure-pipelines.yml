@@ -118,3 +118,13 @@ stages:
         provider: 'azurerm'
         command: 'validate'
         workingDirectory: '$(Pipeline.Workspace)/terraform'
+
+   # Apply
+
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(Pipeline.Workspace)/terraform'
+        commandOptions: '-auto-approve'
+        environmentServiceNameAzureRM: 'slc'
